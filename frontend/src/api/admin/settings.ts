@@ -736,6 +736,10 @@ export interface SystemSettings {
   // Affiliate (邀请返利) feature switch
   affiliate_enabled: boolean;
 
+  // User menu visibility toggles (default true)
+  user_menu_subscriptions_enabled: boolean;
+  user_menu_redeem_enabled: boolean;
+
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;
 
@@ -1037,6 +1041,10 @@ export interface UpdateSettingsRequest {
 
   // Affiliate (邀请返利) feature switch
   affiliate_enabled?: boolean;
+
+  // User menu visibility toggles (default true)
+  user_menu_subscriptions_enabled?: boolean;
+  user_menu_redeem_enabled?: boolean;
 
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;

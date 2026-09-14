@@ -281,6 +281,8 @@ export interface PublicSettings {
   plugin_management_enabled: boolean
   service_quota_enabled: boolean
   affiliate_enabled: boolean
+  user_menu_subscriptions_enabled: boolean
+  user_menu_redeem_enabled: boolean
   allow_user_view_error_requests?: boolean
 }
 

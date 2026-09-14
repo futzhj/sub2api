@@ -129,6 +129,16 @@ export const FeatureFlags = {
     mode: 'opt-in',
     label: 'Affiliate',
   }),
+  userMenuSubscriptions: defineFlag({
+    key: 'user_menu_subscriptions_enabled',
+    mode: 'opt-out',
+    label: 'User Menu Subscriptions',
+  }),
+  userMenuRedeem: defineFlag({
+    key: 'user_menu_redeem_enabled',
+    mode: 'opt-out',
+    label: 'User Menu Redeem',
+  }),
 } as const
 
 export type RegisteredFeatureFlag = keyof typeof FeatureFlags

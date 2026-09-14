@@ -237,6 +237,8 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		SettingKeyModelPlazaEnabled,
 		SettingKeyModelPlazaRequireAuth,
 		SettingKeyPluginManagementEnabled,
+		SettingKeyUserMenuSubscriptionsEnabled,
+		SettingKeyUserMenuRedeemEnabled,
 		SettingKeyAffiliateEnabled,
 		SettingKeyRiskControlEnabled,
 		SettingKeyAllowUserViewErrorRequests,
@@ -366,6 +368,9 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		ModelPlazaEnabled:       settings[SettingKeyModelPlazaEnabled] == "true",
 		ModelPlazaRequireAuth:   settings[SettingKeyModelPlazaRequireAuth] == "true",
 		PluginManagementEnabled: settings[SettingKeyPluginManagementEnabled] == "true",
+
+		UserMenuSubscriptionsEnabled: !isFalseSettingValue(settings[SettingKeyUserMenuSubscriptionsEnabled]),
+		UserMenuRedeemEnabled:        !isFalseSettingValue(settings[SettingKeyUserMenuRedeemEnabled]),
 
 		AffiliateEnabled: settings[SettingKeyAffiliateEnabled] == "true",
 
@@ -633,6 +638,8 @@ type PublicSettingsInjectionPayload struct {
 	ModelPlazaEnabled             bool `json:"model_plaza_enabled"`
 	ModelPlazaRequireAuth         bool `json:"model_plaza_require_auth"`
 	PluginManagementEnabled       bool `json:"plugin_management_enabled"`
+	UserMenuSubscriptionsEnabled  bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled         bool `json:"user_menu_redeem_enabled"`
 	AffiliateEnabled              bool `json:"affiliate_enabled"`
 	RiskControlEnabled            bool `json:"risk_control_enabled"`
 	AllowUserViewErrorRequests    bool `json:"allow_user_view_error_requests"`
@@ -715,6 +722,8 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		ModelPlazaEnabled:                    settings.ModelPlazaEnabled,
 		ModelPlazaRequireAuth:                settings.ModelPlazaRequireAuth,
 		PluginManagementEnabled:              settings.PluginManagementEnabled,
+		UserMenuSubscriptionsEnabled:         settings.UserMenuSubscriptionsEnabled,
+		UserMenuRedeemEnabled:                settings.UserMenuRedeemEnabled,
 		AffiliateEnabled:                     settings.AffiliateEnabled,
 		RiskControlEnabled:                   settings.RiskControlEnabled,
 		AllowUserViewErrorRequests:           settings.AllowUserViewErrorRequests,

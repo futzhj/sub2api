@@ -935,6 +935,26 @@ router.beforeEach(async (to, _from, next) => {
     return
   }
 
+  // Hide user menu routes when admin disables them (admins keep access)
+  if (
+    !authStore.isAdmin &&
+    appStore.publicSettingsLoaded &&
+    to.path.startsWith('/subscriptions') &&
+    appStore.cachedPublicSettings?.user_menu_subscriptions_enabled === false
+  ) {
+    next('/dashboard')
+    return
+  }
+  if (
+    !authStore.isAdmin &&
+    appStore.publicSettingsLoaded &&
+    to.path.startsWith('/redeem') &&
+    appStore.cachedPublicSettings?.user_menu_redeem_enabled === false
+  ) {
+    next('/dashboard')
+    return
+  }
+
   // 简易模式下限制访问某些页面
   if (authStore.isSimpleMode) {
     const restrictedPaths = [

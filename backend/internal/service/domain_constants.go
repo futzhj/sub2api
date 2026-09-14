@@ -531,6 +531,14 @@ const (
 	// not stop or otherwise change already loaded plugin runtimes.
 	SettingKeyPluginManagementEnabled = "plugin_management_enabled"
 
+	// SettingKeyUserMenuSubscriptionsEnabled controls user sidebar/route access
+	// for /subscriptions (my subscriptions). Default true (opt-out).
+	SettingKeyUserMenuSubscriptionsEnabled = "user_menu_subscriptions_enabled"
+
+	// SettingKeyUserMenuRedeemEnabled controls user sidebar/route access
+	// for /redeem. Default true (opt-out).
+	SettingKeyUserMenuRedeemEnabled = "user_menu_redeem_enabled"
+
 	// SettingKeyUpstreamBillingProbeSettings stores the global enable switch and interval
 	// for probing remote Sub2API API-key billing metadata.
 	SettingKeyUpstreamBillingProbeSettings = "upstream_billing_probe_settings"

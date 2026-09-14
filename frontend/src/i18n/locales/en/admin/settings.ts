@@ -71,6 +71,14 @@ export default {
           cyberSessionBlockHint: 'When enabled, sessions hit by upstream cyber_policy are blocked locally for the TTL and no longer forwarded. Only the offending session is blocked; other sessions on the same key are unaffected.',
           cyberSessionBlockTTL: 'Block TTL (seconds)',
         },
+        userMenu: {
+          title: 'User Menu Visibility',
+          description: 'Control whether regular users see My Subscriptions and Redeem in the sidebar. Enabled by default. When off, non-admins are redirected from those pages to the dashboard.',
+          subscriptionsEnabled: 'Show My Subscriptions',
+          subscriptionsEnabledHint: 'When off, the sidebar entry is hidden and non-admins cannot open /subscriptions.',
+          redeemEnabled: 'Show Redeem',
+          redeemEnabledHint: 'When off, the sidebar entry is hidden and non-admins cannot open /redeem.',
+        },
         affiliate: {
           title: 'Affiliate (Invite Rebate)',
           description: 'Existing users invite new ones; the inviter earns a percentage rebate on the invitee’s recharges. Disabled by default.',

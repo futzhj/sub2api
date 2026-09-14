@@ -323,6 +323,10 @@ type SystemSettings struct {
 	ModelPlazaDescription   string `json:"model_plaza_description"`
 	PluginManagementEnabled bool   `json:"plugin_management_enabled"`
 
+	// User menu visibility toggles (default true)
+	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
+
 	// 风控中心功能开关
 	RiskControlEnabled bool `json:"risk_control_enabled"`
 
@@ -425,6 +429,9 @@ type PublicSettings struct {
 	ModelPlazaEnabled       bool `json:"model_plaza_enabled"`
 	ModelPlazaRequireAuth   bool `json:"model_plaza_require_auth"`
 	PluginManagementEnabled bool `json:"plugin_management_enabled"`
+
+	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
 
 	AffiliateEnabled bool `json:"affiliate_enabled"`
 

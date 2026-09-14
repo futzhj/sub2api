@@ -218,6 +218,10 @@ type SystemSettings struct {
 	ModelPlazaDescription   string `json:"model_plaza_description"`
 	PluginManagementEnabled bool   `json:"plugin_management_enabled"`
 
+	// User menu visibility toggles (default true)
+	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
+
 	// Claude Code version check
 	MinClaudeCodeVersion string
 	MaxClaudeCodeVersion string
@@ -397,6 +401,9 @@ type PublicSettings struct {
 	ModelPlazaEnabled       bool `json:"model_plaza_enabled"`
 	ModelPlazaRequireAuth   bool `json:"model_plaza_require_auth"`
 	PluginManagementEnabled bool `json:"plugin_management_enabled"`
+
+	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
 
 	// Affiliate (邀请返利) feature toggle
 	AffiliateEnabled bool `json:"affiliate_enabled"`

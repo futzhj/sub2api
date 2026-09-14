@@ -71,6 +71,14 @@ export default {
           cyberSessionBlockHint: '开启后,被上游网络安全策略(cyber_policy)拦截的会话将在 TTL 内被本地屏蔽,不再发往上游。仅屏蔽该会话,不影响同 Key 其他会话。',
           cyberSessionBlockTTL: '屏蔽时长(秒)',
         },
+        userMenu: {
+          title: '用户菜单显示',
+          description: '控制普通用户侧边栏中「我的订阅」和「兑换」入口的显示。默认开启。关闭后非管理员访问对应页面将跳转到仪表盘。',
+          subscriptionsEnabled: '显示「我的订阅」',
+          subscriptionsEnabledHint: '关闭后用户侧边栏隐藏「我的订阅」，非管理员无法访问 /subscriptions。',
+          redeemEnabled: '显示「兑换」',
+          redeemEnabledHint: '关闭后用户侧边栏隐藏「兑换」，非管理员无法访问 /redeem。',
+        },
         affiliate: {
           title: '邀请返利',
           description: '老用户邀请新用户注册，新用户充值后老用户按比例获得返利额度。默认关闭。',

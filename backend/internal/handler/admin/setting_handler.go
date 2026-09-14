@@ -387,6 +387,8 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		ModelPlazaEnabled:       settings.ModelPlazaEnabled,
 		ModelPlazaRequireAuth:   settings.ModelPlazaRequireAuth,
 		PluginManagementEnabled: settings.PluginManagementEnabled,
+		UserMenuSubscriptionsEnabled: settings.UserMenuSubscriptionsEnabled,
+		UserMenuRedeemEnabled: settings.UserMenuRedeemEnabled,
 		ModelPlazaDescription:   settings.ModelPlazaDescription,
 
 		AffiliateEnabled: settings.AffiliateEnabled,

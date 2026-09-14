@@ -7309,6 +7309,42 @@
           </div>
         </div>
 
+        <!-- User menu visibility feature card -->
+        <div class="card">
+          <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+              {{ t('admin.settings.features.userMenu.title') }}
+            </h2>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {{ t('admin.settings.features.userMenu.description') }}
+            </p>
+          </div>
+          <div class="space-y-5 p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t('admin.settings.features.userMenu.subscriptionsEnabled') }}
+                </label>
+                <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('admin.settings.features.userMenu.subscriptionsEnabledHint') }}
+                </p>
+              </div>
+              <Toggle v-model="form.user_menu_subscriptions_enabled" />
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ t('admin.settings.features.userMenu.redeemEnabled') }}
+                </label>
+                <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('admin.settings.features.userMenu.redeemEnabledHint') }}
+                </p>
+              </div>
+              <Toggle v-model="form.user_menu_redeem_enabled" />
+            </div>
+          </div>
+        </div>
+
         <!-- Affiliate (邀请返利) feature card -->
         <div class="card">
           <div class="border-b border-gray-100 px-6 py-4 dark:border-dark-700">
@@ -9822,6 +9858,9 @@ const form = reactive<SettingsForm>({
   plugin_management_enabled: false,
   // Affiliate (邀请返利) feature switch
   affiliate_enabled: false,
+  // User menu visibility (default true)
+  user_menu_subscriptions_enabled: true,
+  user_menu_redeem_enabled: true,
   // Allow user view error requests
   allow_user_view_error_requests: false,
 });
@@ -11485,6 +11524,8 @@ async function saveSettings() {
       plugin_management_enabled: form.plugin_management_enabled,
       // Affiliate (邀请返利) feature switch
       affiliate_enabled: form.affiliate_enabled,
+      user_menu_subscriptions_enabled: form.user_menu_subscriptions_enabled,
+      user_menu_redeem_enabled: form.user_menu_redeem_enabled,
       allow_user_view_error_requests: form.allow_user_view_error_requests,
     };
 

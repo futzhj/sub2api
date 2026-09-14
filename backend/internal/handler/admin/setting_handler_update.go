@@ -352,6 +352,10 @@ type UpdateSettingsRequest struct {
 	// Plugin management menu visibility switch; plugin runtime is unaffected.
 	PluginManagementEnabled *bool `json:"plugin_management_enabled"`
 
+	// User menu visibility toggles (default true)
+	UserMenuSubscriptionsEnabled *bool `json:"user_menu_subscriptions_enabled"`
+	UserMenuRedeemEnabled        *bool `json:"user_menu_redeem_enabled"`
+
 	// Affiliate (邀请返利) feature switch
 	AffiliateEnabled *bool `json:"affiliate_enabled"`
 
@@ -1961,6 +1965,18 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.PluginManagementEnabled
 		}(),
+		UserMenuSubscriptionsEnabled: func() bool {
+			if req.UserMenuSubscriptionsEnabled != nil {
+				return *req.UserMenuSubscriptionsEnabled
+			}
+			return previousSettings.UserMenuSubscriptionsEnabled
+		}(),
+		UserMenuRedeemEnabled: func() bool {
+			if req.UserMenuRedeemEnabled != nil {
+				return *req.UserMenuRedeemEnabled
+			}
+			return previousSettings.UserMenuRedeemEnabled
+		}(),
 		AffiliateEnabled: func() bool {
 			if req.AffiliateEnabled != nil {
 				return *req.AffiliateEnabled
@@ -2385,6 +2401,8 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		ModelPlazaRequireAuth:   updatedSettings.ModelPlazaRequireAuth,
 		ModelPlazaDescription:   updatedSettings.ModelPlazaDescription,
 		PluginManagementEnabled: updatedSettings.PluginManagementEnabled,
+		UserMenuSubscriptionsEnabled: updatedSettings.UserMenuSubscriptionsEnabled,
+		UserMenuRedeemEnabled: updatedSettings.UserMenuRedeemEnabled,
 
 		AffiliateEnabled: updatedSettings.AffiliateEnabled,
 
