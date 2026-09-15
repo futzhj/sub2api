@@ -571,6 +571,11 @@ const (
 	// for /redeem. Default true (opt-out).
 	SettingKeyUserMenuRedeemEnabled = "user_menu_redeem_enabled"
 
+	// SettingKeyThemePreset selects a named brand color preset (teal/blue/purple/green/orange/rose/custom).
+	SettingKeyThemePreset = "theme_preset"
+	// SettingKeyThemePrimaryColor is the custom primary hex when theme_preset=custom (also stored for presets).
+	SettingKeyThemePrimaryColor = "theme_primary_color"
+
 	// SettingKeyUpstreamBillingProbeSettings stores the global enable switch and interval
 	// for probing remote Sub2API API-key billing metadata.
 	SettingKeyUpstreamBillingProbeSettings = "upstream_billing_probe_settings"

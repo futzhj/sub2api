@@ -744,6 +744,8 @@ export interface SystemSettings {
   // User menu visibility toggles (default true)
   user_menu_subscriptions_enabled: boolean;
   user_menu_redeem_enabled: boolean;
+  theme_preset: string;
+  theme_primary_color: string;
 
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;
@@ -1053,6 +1055,8 @@ export interface UpdateSettingsRequest {
   // User menu visibility toggles (default true)
   user_menu_subscriptions_enabled?: boolean;
   user_menu_redeem_enabled?: boolean;
+  theme_preset?: string;
+  theme_primary_color?: string;
 
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;

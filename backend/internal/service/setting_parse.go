@@ -215,6 +215,10 @@ func (s *SettingService) InitializeDefaultSettings(ctx context.Context) error {
 		SettingKeyUserMenuSubscriptionsEnabled: "true",
 		SettingKeyUserMenuRedeemEnabled:        "true",
 
+		// Brand theme (default teal)
+		SettingKeyThemePreset:       DefaultThemePreset,
+		SettingKeyThemePrimaryColor: DefaultThemePrimaryColor,
+
 		// Affiliate (邀请返利) feature (default disabled; opt-in)
 		SettingKeyAffiliateEnabled:              "false",
 		SettingKeyAffiliateAdminRechargeEnabled: strconv.FormatBool(AdminRechargeRebateEnabledDefault),
@@ -839,6 +843,9 @@ func (s *SettingService) parseSettings(settings map[string]string) *SystemSettin
 	// User menu visibility (default true / opt-out)
 	result.UserMenuSubscriptionsEnabled = !isFalseSettingValue(settings[SettingKeyUserMenuSubscriptionsEnabled])
 	result.UserMenuRedeemEnabled = !isFalseSettingValue(settings[SettingKeyUserMenuRedeemEnabled])
+
+	result.ThemePreset = NormalizeThemePreset(settings[SettingKeyThemePreset])
+	result.ThemePrimaryColor = ResolveThemePrimaryColor(result.ThemePreset, settings[SettingKeyThemePrimaryColor])
 
 	// Affiliate (邀请返利) feature (default: disabled; strict true)
 	result.AffiliateEnabled = settings[SettingKeyAffiliateEnabled] == "true"

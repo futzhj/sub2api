@@ -241,6 +241,8 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		SettingKeyPluginManagementEnabled,
 		SettingKeyUserMenuSubscriptionsEnabled,
 		SettingKeyUserMenuRedeemEnabled,
+		SettingKeyThemePreset,
+		SettingKeyThemePrimaryColor,
 		SettingKeyAffiliateEnabled,
 		SettingKeyRiskControlEnabled,
 		SettingKeyAllowUserViewErrorRequests,
@@ -376,6 +378,9 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 
 		UserMenuSubscriptionsEnabled: !isFalseSettingValue(settings[SettingKeyUserMenuSubscriptionsEnabled]),
 		UserMenuRedeemEnabled:        !isFalseSettingValue(settings[SettingKeyUserMenuRedeemEnabled]),
+
+		ThemePreset:       NormalizeThemePreset(settings[SettingKeyThemePreset]),
+		ThemePrimaryColor: ResolveThemePrimaryColor(NormalizeThemePreset(settings[SettingKeyThemePreset]), settings[SettingKeyThemePrimaryColor]),
 
 		AffiliateEnabled: settings[SettingKeyAffiliateEnabled] == "true",
 
@@ -647,6 +652,8 @@ type PublicSettingsInjectionPayload struct {
 	PluginManagementEnabled       bool `json:"plugin_management_enabled"`
 	UserMenuSubscriptionsEnabled  bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled         bool `json:"user_menu_redeem_enabled"`
+	ThemePreset                   string `json:"theme_preset"`
+	ThemePrimaryColor             string `json:"theme_primary_color"`
 	AffiliateEnabled              bool `json:"affiliate_enabled"`
 	RiskControlEnabled            bool `json:"risk_control_enabled"`
 	AllowUserViewErrorRequests    bool `json:"allow_user_view_error_requests"`
@@ -733,6 +740,8 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		PluginManagementEnabled:              settings.PluginManagementEnabled,
 		UserMenuSubscriptionsEnabled:         settings.UserMenuSubscriptionsEnabled,
 		UserMenuRedeemEnabled:                settings.UserMenuRedeemEnabled,
+		ThemePreset:                          settings.ThemePreset,
+		ThemePrimaryColor:                    settings.ThemePrimaryColor,
 		AffiliateEnabled:                     settings.AffiliateEnabled,
 		RiskControlEnabled:                   settings.RiskControlEnabled,
 		AllowUserViewErrorRequests:           settings.AllowUserViewErrorRequests,

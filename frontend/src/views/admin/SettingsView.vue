@@ -6314,6 +6314,80 @@
                 </div>
               </div>
 
+              <!-- Brand theme -->
+              <div class="rounded-xl border border-gray-200 p-4 dark:border-dark-700">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                  {{ t('admin.settings.features.theme.title') }}
+                </h3>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {{ t('admin.settings.features.theme.description') }}
+                </p>
+                <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('admin.settings.features.theme.preset') }}
+                    </label>
+                    <select v-model="form.theme_preset" class="input" @change="onThemeFormChange">
+                      <option value="teal">{{ t('admin.settings.features.theme.presets.teal') }}</option>
+                      <option value="blue">{{ t('admin.settings.features.theme.presets.blue') }}</option>
+                      <option value="purple">{{ t('admin.settings.features.theme.presets.purple') }}</option>
+                      <option value="green">{{ t('admin.settings.features.theme.presets.green') }}</option>
+                      <option value="orange">{{ t('admin.settings.features.theme.presets.orange') }}</option>
+                      <option value="rose">{{ t('admin.settings.features.theme.presets.rose') }}</option>
+                      <option value="custom">{{ t('admin.settings.features.theme.presets.custom') }}</option>
+                    </select>
+                    <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('admin.settings.features.theme.presetHint') }}
+                    </p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('admin.settings.features.theme.primaryColor') }}
+                    </label>
+                    <div class="flex items-center gap-3">
+                      <input
+                        v-model="form.theme_primary_color"
+                        type="color"
+                        class="h-10 w-14 cursor-pointer rounded border border-gray-200 bg-transparent p-1 dark:border-dark-600"
+                        :disabled="form.theme_preset !== 'custom'"
+                        @input="onThemeFormChange"
+                      />
+                      <input
+                        v-model="form.theme_primary_color"
+                        type="text"
+                        class="input font-mono"
+                        placeholder="#14b8a6"
+                        :disabled="form.theme_preset !== 'custom'"
+                        @change="onThemeFormChange"
+                      />
+                      <span
+                        class="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary-500 px-3 text-sm font-medium text-white shadow-glow"
+                      >
+                        {{ t('admin.settings.features.theme.preview') }}
+                      </span>
+                    </div>
+                    <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('admin.settings.features.theme.primaryColorHint') }}
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <button
+                    v-for="preset in themePresetSwatches"
+                    :key="preset.id"
+                    type="button"
+                    class="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs transition"
+                    :class="form.theme_preset === preset.id
+                      ? 'border-primary-500 bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-300'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-dark-600 dark:text-gray-300'"
+                    @click="selectThemePreset(preset.id)"
+                  >
+                    <span class="h-3 w-3 rounded-full" :style="{ backgroundColor: preset.color }"></span>
+                    {{ t(`admin.settings.features.theme.presets.${preset.id}`) }}
+                  </button>
+                </div>
+              </div>
+
               <!-- API Base URL -->
               <div>
                 <label
@@ -8854,6 +8928,7 @@
 </template>
 
 <script setup lang="ts">
+import { applyBrandTheme, THEME_PRESET_COLORS, type ThemePreset } from '@/utils/theme'
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { adminAPI } from "@/api";
@@ -9624,6 +9699,28 @@ type SettingsForm = Omit<
 
 const schedulingThresholdPlatforms = SCHEDULING_THRESHOLD_PLATFORMS;
 
+
+const themePresetSwatches = [
+  { id: 'teal', color: THEME_PRESET_COLORS.teal },
+  { id: 'blue', color: THEME_PRESET_COLORS.blue },
+  { id: 'purple', color: THEME_PRESET_COLORS.purple },
+  { id: 'green', color: THEME_PRESET_COLORS.green },
+  { id: 'orange', color: THEME_PRESET_COLORS.orange },
+  { id: 'rose', color: THEME_PRESET_COLORS.rose },
+] as const
+
+function onThemeFormChange() {
+  applyBrandTheme(form.theme_preset, form.theme_primary_color)
+}
+
+function selectThemePreset(id: string) {
+  form.theme_preset = id
+  if (id !== 'custom' && id in THEME_PRESET_COLORS) {
+    form.theme_primary_color = THEME_PRESET_COLORS[id as Exclude<ThemePreset, 'custom'>]
+  }
+  onThemeFormChange()
+}
+
 const form = reactive<SettingsForm>({
   registration_enabled: true,
   email_verify_enabled: false,
@@ -9913,6 +10010,8 @@ const form = reactive<SettingsForm>({
   // User menu visibility (default true)
   user_menu_subscriptions_enabled: true,
   user_menu_redeem_enabled: true,
+  theme_preset: 'teal',
+  theme_primary_color: '#14b8a6',
   // Allow user view error requests
   allow_user_view_error_requests: false,
 });
@@ -10880,6 +10979,7 @@ async function loadSettings() {
         (form as Record<string, unknown>)[key] = value;
       }
     }
+    onThemeFormChange();
     syncCaptchaProviderSelection();
     if (!form.claude_oauth_system_prompt_blocks?.trim()) {
       form.claude_oauth_system_prompt_blocks =
@@ -11598,6 +11698,8 @@ async function saveSettings() {
       affiliate_enabled: form.affiliate_enabled,
       user_menu_subscriptions_enabled: form.user_menu_subscriptions_enabled,
       user_menu_redeem_enabled: form.user_menu_redeem_enabled,
+      theme_preset: form.theme_preset,
+      theme_primary_color: form.theme_primary_color,
       allow_user_view_error_requests: form.allow_user_view_error_requests,
     };
 

@@ -288,6 +288,8 @@ export interface PublicSettings {
   affiliate_enabled: boolean
   user_menu_subscriptions_enabled: boolean
   user_menu_redeem_enabled: boolean
+  theme_preset?: string
+  theme_primary_color?: string
   allow_user_view_error_requests?: boolean
 }
 

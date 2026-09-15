@@ -358,6 +358,8 @@ type UpdateSettingsRequest struct {
 	// User menu visibility toggles (default true)
 	UserMenuSubscriptionsEnabled *bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled        *bool `json:"user_menu_redeem_enabled"`
+	ThemePreset                  *string `json:"theme_preset"`
+	ThemePrimaryColor            *string `json:"theme_primary_color"`
 
 	// Affiliate (邀请返利) feature switch
 	AffiliateEnabled *bool `json:"affiliate_enabled"`
@@ -1986,6 +1988,18 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.UserMenuRedeemEnabled
 		}(),
+		ThemePreset: func() string {
+			if req.ThemePreset != nil {
+				return service.NormalizeThemePreset(*req.ThemePreset)
+			}
+			return previousSettings.ThemePreset
+		}(),
+		ThemePrimaryColor: func() string {
+			if req.ThemePrimaryColor != nil {
+				return service.NormalizeThemePrimaryColor(*req.ThemePrimaryColor)
+			}
+			return previousSettings.ThemePrimaryColor
+		}(),
 		AffiliateEnabled: func() bool {
 			if req.AffiliateEnabled != nil {
 				return *req.AffiliateEnabled
@@ -2413,6 +2427,8 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		PluginManagementEnabled: updatedSettings.PluginManagementEnabled,
 		UserMenuSubscriptionsEnabled: updatedSettings.UserMenuSubscriptionsEnabled,
 		UserMenuRedeemEnabled: updatedSettings.UserMenuRedeemEnabled,
+		ThemePreset:                  updatedSettings.ThemePreset,
+		ThemePrimaryColor:            updatedSettings.ThemePrimaryColor,
 
 		AffiliateEnabled: updatedSettings.AffiliateEnabled,
 

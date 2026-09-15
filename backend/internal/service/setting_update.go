@@ -443,6 +443,11 @@ func (s *SettingService) buildSystemSettingsUpdates(ctx context.Context, setting
 
 	updates[SettingKeyUserMenuSubscriptionsEnabled] = strconv.FormatBool(settings.UserMenuSubscriptionsEnabled)
 	updates[SettingKeyUserMenuRedeemEnabled] = strconv.FormatBool(settings.UserMenuRedeemEnabled)
+	updates[SettingKeyThemePreset] = NormalizeThemePreset(settings.ThemePreset)
+	updates[SettingKeyThemePrimaryColor] = NormalizeThemePrimaryColor(settings.ThemePrimaryColor)
+	if updates[SettingKeyThemePreset] != ThemePresetCustom {
+		updates[SettingKeyThemePrimaryColor] = ResolveThemePrimaryColor(updates[SettingKeyThemePreset], updates[SettingKeyThemePrimaryColor])
+	}
 
 	// Affiliate (邀请返利) feature switch
 	updates[SettingKeyAffiliateEnabled] = strconv.FormatBool(settings.AffiliateEnabled)

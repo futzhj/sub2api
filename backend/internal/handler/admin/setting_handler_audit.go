@@ -600,6 +600,12 @@ func diffSettings(before *service.SystemSettings, after *service.SystemSettings,
 	if before.UserMenuRedeemEnabled != after.UserMenuRedeemEnabled {
 		changed = append(changed, "user_menu_redeem_enabled")
 	}
+	if before.ThemePreset != after.ThemePreset {
+		changed = append(changed, "theme_preset")
+	}
+	if before.ThemePrimaryColor != after.ThemePrimaryColor {
+		changed = append(changed, "theme_primary_color")
+	}
 	if before.RiskControlEnabled != after.RiskControlEnabled {
 		changed = append(changed, "risk_control_enabled")
 	}

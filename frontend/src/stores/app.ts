@@ -6,6 +6,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Toast, ToastType, PublicSettings } from '@/types'
+import { applyBrandTheme } from '@/utils/theme'
 import { i18n } from '@/i18n'
 import {
   checkUpdates as checkUpdatesAPI,
@@ -294,6 +295,7 @@ export const useAppStore = defineStore('app', () => {
       window.__APP_CONFIG__ = { ...config }
     }
     cachedPublicSettings.value = config
+    applyBrandTheme(config.theme_preset, config.theme_primary_color)
     siteName.value = config.site_name || 'Sub2API'
     siteLogo.value = config.site_logo || ''
     siteVersion.value = config.version || ''
@@ -381,6 +383,8 @@ export const useAppStore = defineStore('app', () => {
         affiliate_enabled: false,
         user_menu_subscriptions_enabled: true,
         user_menu_redeem_enabled: true,
+        theme_preset: 'teal',
+        theme_primary_color: '#14b8a6',
         allow_user_view_error_requests: false,
       })
     }

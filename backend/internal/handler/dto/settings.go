@@ -331,6 +331,8 @@ type SystemSettings struct {
 	// User menu visibility toggles (default true)
 	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
+	ThemePreset                  string `json:"theme_preset"`
+	ThemePrimaryColor            string `json:"theme_primary_color"`
 
 	// 风控中心功能开关
 	RiskControlEnabled bool `json:"risk_control_enabled"`
@@ -443,6 +445,8 @@ type PublicSettings struct {
 
 	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
+	ThemePreset                  string `json:"theme_preset"`
+	ThemePrimaryColor            string `json:"theme_primary_color"`
 
 	AffiliateEnabled bool `json:"affiliate_enabled"`
 
