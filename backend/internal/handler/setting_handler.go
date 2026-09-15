@@ -118,6 +118,11 @@ func (h *SettingHandler) GetPublicSettings(c *gin.Context) {
 		ModelPlazaRequireAuth:   settings.ModelPlazaRequireAuth,
 		PluginManagementEnabled: settings.PluginManagementEnabled,
 
+		UserMenuSubscriptionsEnabled: settings.UserMenuSubscriptionsEnabled,
+		UserMenuRedeemEnabled:        settings.UserMenuRedeemEnabled,
+		ThemePreset:                  settings.ThemePreset,
+		ThemePrimaryColor:            settings.ThemePrimaryColor,
+
 		AffiliateEnabled: settings.AffiliateEnabled,
 
 		RiskControlEnabled: settings.RiskControlEnabled,
