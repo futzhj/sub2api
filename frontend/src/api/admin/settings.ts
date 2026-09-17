@@ -746,6 +746,7 @@ export interface SystemSettings {
   user_menu_redeem_enabled: boolean;
   theme_preset: string;
   theme_primary_color: string;
+  theme_secondary_color: string;
 
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;
@@ -1057,6 +1058,7 @@ export interface UpdateSettingsRequest {
   user_menu_redeem_enabled?: boolean;
   theme_preset?: string;
   theme_primary_color?: string;
+  theme_secondary_color?: string;
 
   // OpenAI fast/flex policy
   openai_fast_policy_settings?: OpenAIFastPolicySettings;

@@ -228,9 +228,10 @@ type SystemSettings struct {
 	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
 
-	// Brand theme (public; default teal / #14b8a6)
-	ThemePreset       string `json:"theme_preset"`
-	ThemePrimaryColor string `json:"theme_primary_color"`
+	// Brand theme (public; default teal / #14b8a6 + teal-600 secondary)
+	ThemePreset         string `json:"theme_preset"`
+	ThemePrimaryColor   string `json:"theme_primary_color"`
+	ThemeSecondaryColor string `json:"theme_secondary_color"`
 
 	// Claude Code version check
 	MinClaudeCodeVersion string
@@ -419,8 +420,9 @@ type PublicSettings struct {
 	UserMenuSubscriptionsEnabled bool `json:"user_menu_subscriptions_enabled"`
 	UserMenuRedeemEnabled        bool `json:"user_menu_redeem_enabled"`
 
-	ThemePreset       string `json:"theme_preset"`
-	ThemePrimaryColor string `json:"theme_primary_color"`
+	ThemePreset         string `json:"theme_preset"`
+	ThemePrimaryColor   string `json:"theme_primary_color"`
+	ThemeSecondaryColor string `json:"theme_secondary_color"`
 
 	// Affiliate (邀请返利) feature toggle
 	AffiliateEnabled bool `json:"affiliate_enabled"`

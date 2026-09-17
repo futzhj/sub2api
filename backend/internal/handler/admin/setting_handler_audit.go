@@ -606,6 +606,9 @@ func diffSettings(before *service.SystemSettings, after *service.SystemSettings,
 	if before.ThemePrimaryColor != after.ThemePrimaryColor {
 		changed = append(changed, "theme_primary_color")
 	}
+	if before.ThemeSecondaryColor != after.ThemeSecondaryColor {
+		changed = append(changed, "theme_secondary_color")
+	}
 	if before.RiskControlEnabled != after.RiskControlEnabled {
 		changed = append(changed, "risk_control_enabled")
 	}

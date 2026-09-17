@@ -19,6 +19,20 @@ export default {
           900: 'rgb(var(--primary-900-rgb, 19 78 74) / <alpha-value>)',
           950: 'rgb(var(--primary-950-rgb, 4 47 46) / <alpha-value>)'
         },
+        // 品牌辅色 / secondary accent（由主题运行时注入）
+        secondary: {
+          50: 'rgb(var(--secondary-50-rgb, 240 253 250) / <alpha-value>)',
+          100: 'rgb(var(--secondary-100-rgb, 204 251 241) / <alpha-value>)',
+          200: 'rgb(var(--secondary-200-rgb, 153 246 228) / <alpha-value>)',
+          300: 'rgb(var(--secondary-300-rgb, 94 234 212) / <alpha-value>)',
+          400: 'rgb(var(--secondary-400-rgb, 45 212 191) / <alpha-value>)',
+          500: 'rgb(var(--secondary-500-rgb, 13 148 136) / <alpha-value>)',
+          600: 'rgb(var(--secondary-600-rgb, 15 118 110) / <alpha-value>)',
+          700: 'rgb(var(--secondary-700-rgb, 17 94 89) / <alpha-value>)',
+          800: 'rgb(var(--secondary-800-rgb, 19 78 74) / <alpha-value>)',
+          900: 'rgb(var(--secondary-900-rgb, 19 78 74) / <alpha-value>)',
+          950: 'rgb(var(--secondary-950-rgb, 4 47 46) / <alpha-value>)'
+        },
         // 辅助色 - 深蓝灰
         accent: {
           50: '#f8fafc',

@@ -295,7 +295,7 @@ export const useAppStore = defineStore('app', () => {
       window.__APP_CONFIG__ = { ...config }
     }
     cachedPublicSettings.value = config
-    applyBrandTheme(config.theme_preset, config.theme_primary_color)
+    applyBrandTheme(config.theme_preset, config.theme_primary_color, config.theme_secondary_color)
     siteName.value = config.site_name || 'Sub2API'
     siteLogo.value = config.site_logo || ''
     siteVersion.value = config.version || ''
@@ -385,6 +385,7 @@ export const useAppStore = defineStore('app', () => {
         user_menu_redeem_enabled: true,
         theme_preset: 'teal',
         theme_primary_color: '#14b8a6',
+        theme_secondary_color: '#0d9488',
         allow_user_view_error_requests: false,
       })
     }

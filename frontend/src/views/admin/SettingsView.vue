@@ -6328,17 +6328,33 @@
                       {{ t('admin.settings.features.theme.preset') }}
                     </label>
                     <select v-model="form.theme_preset" class="input" @change="onThemeFormChange">
-                      <option value="teal">{{ t('admin.settings.features.theme.presets.teal') }}</option>
-                      <option value="blue">{{ t('admin.settings.features.theme.presets.blue') }}</option>
-                      <option value="purple">{{ t('admin.settings.features.theme.presets.purple') }}</option>
-                      <option value="green">{{ t('admin.settings.features.theme.presets.green') }}</option>
-                      <option value="orange">{{ t('admin.settings.features.theme.presets.orange') }}</option>
-                      <option value="rose">{{ t('admin.settings.features.theme.presets.rose') }}</option>
-                      <option value="custom">{{ t('admin.settings.features.theme.presets.custom') }}</option>
+                      <option
+                        v-for="preset in themePresetOptions"
+                        :key="preset"
+                        :value="preset"
+                      >
+                        {{ t(`admin.settings.features.theme.presets.${preset}`) }}
+                      </option>
                     </select>
                     <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                       {{ t('admin.settings.features.theme.presetHint') }}
                     </p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('admin.settings.features.theme.preview') }}
+                    </label>
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="inline-flex h-10 flex-1 items-center justify-center rounded-xl px-3 text-sm font-medium shadow-glow"
+                        :style="{
+                          background: `linear-gradient(135deg, ${form.theme_primary_color} 0%, ${form.theme_secondary_color} 100%)`,
+                          color: 'var(--on-primary, #fff)',
+                        }"
+                      >
+                        {{ t('admin.settings.features.theme.preview') }}
+                      </span>
+                    </div>
                   </div>
                   <div>
                     <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -6360,14 +6376,34 @@
                         :disabled="form.theme_preset !== 'custom'"
                         @change="onThemeFormChange"
                       />
-                      <span
-                        class="inline-flex h-10 flex-1 items-center justify-center rounded-xl bg-primary-500 px-3 text-sm font-medium text-white shadow-glow"
-                      >
-                        {{ t('admin.settings.features.theme.preview') }}
-                      </span>
                     </div>
                     <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
                       {{ t('admin.settings.features.theme.primaryColorHint') }}
+                    </p>
+                  </div>
+                  <div>
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {{ t('admin.settings.features.theme.secondaryColor') }}
+                    </label>
+                    <div class="flex items-center gap-3">
+                      <input
+                        v-model="form.theme_secondary_color"
+                        type="color"
+                        class="h-10 w-14 cursor-pointer rounded border border-gray-200 bg-transparent p-1 dark:border-dark-600"
+                        :disabled="form.theme_preset !== 'custom'"
+                        @input="onThemeFormChange"
+                      />
+                      <input
+                        v-model="form.theme_secondary_color"
+                        type="text"
+                        class="input font-mono"
+                        placeholder="#0d9488"
+                        :disabled="form.theme_preset !== 'custom'"
+                        @change="onThemeFormChange"
+                      />
+                    </div>
+                    <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('admin.settings.features.theme.secondaryColorHint') }}
                     </p>
                   </div>
                 </div>
@@ -6382,7 +6418,10 @@
                       : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-dark-600 dark:text-gray-300'"
                     @click="selectThemePreset(preset.id)"
                   >
-                    <span class="h-3 w-3 rounded-full" :style="{ backgroundColor: preset.color }"></span>
+                    <span class="relative inline-flex h-3 w-5 overflow-hidden rounded-full border border-black/5 dark:border-white/10">
+                      <span class="h-full w-1/2" :style="{ backgroundColor: preset.primary }"></span>
+                      <span class="h-full w-1/2" :style="{ backgroundColor: preset.secondary }"></span>
+                    </span>
                     {{ t(`admin.settings.features.theme.presets.${preset.id}`) }}
                   </button>
                 </div>
@@ -8928,7 +8967,7 @@
 </template>
 
 <script setup lang="ts">
-import { applyBrandTheme, THEME_PRESET_COLORS, type ThemePreset } from '@/utils/theme'
+import { applyBrandTheme, THEME_PRESET_PALETTES, THEME_PRESETS, type ThemePreset } from '@/utils/theme'
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { adminAPI } from "@/api";
@@ -9700,23 +9739,26 @@ type SettingsForm = Omit<
 const schedulingThresholdPlatforms = SCHEDULING_THRESHOLD_PLATFORMS;
 
 
-const themePresetSwatches = [
-  { id: 'teal', color: THEME_PRESET_COLORS.teal },
-  { id: 'blue', color: THEME_PRESET_COLORS.blue },
-  { id: 'purple', color: THEME_PRESET_COLORS.purple },
-  { id: 'green', color: THEME_PRESET_COLORS.green },
-  { id: 'orange', color: THEME_PRESET_COLORS.orange },
-  { id: 'rose', color: THEME_PRESET_COLORS.rose },
-] as const
+const themePresetOptions = THEME_PRESETS
+
+const themePresetSwatches = (
+  Object.entries(THEME_PRESET_PALETTES) as [Exclude<ThemePreset, 'custom'>, { primary: string; secondary: string }][]
+).map(([id, palette]) => ({
+  id,
+  primary: palette.primary,
+  secondary: palette.secondary,
+}))
 
 function onThemeFormChange() {
-  applyBrandTheme(form.theme_preset, form.theme_primary_color)
+  applyBrandTheme(form.theme_preset, form.theme_primary_color, form.theme_secondary_color)
 }
 
 function selectThemePreset(id: string) {
   form.theme_preset = id
-  if (id !== 'custom' && id in THEME_PRESET_COLORS) {
-    form.theme_primary_color = THEME_PRESET_COLORS[id as Exclude<ThemePreset, 'custom'>]
+  if (id !== 'custom' && id in THEME_PRESET_PALETTES) {
+    const palette = THEME_PRESET_PALETTES[id as Exclude<ThemePreset, 'custom'>]
+    form.theme_primary_color = palette.primary
+    form.theme_secondary_color = palette.secondary
   }
   onThemeFormChange()
 }
@@ -10012,6 +10054,7 @@ const form = reactive<SettingsForm>({
   user_menu_redeem_enabled: true,
   theme_preset: 'teal',
   theme_primary_color: '#14b8a6',
+  theme_secondary_color: '#0d9488',
   // Allow user view error requests
   allow_user_view_error_requests: false,
 });
@@ -11700,6 +11743,7 @@ async function saveSettings() {
       user_menu_redeem_enabled: form.user_menu_redeem_enabled,
       theme_preset: form.theme_preset,
       theme_primary_color: form.theme_primary_color,
+      theme_secondary_color: form.theme_secondary_color,
       allow_user_view_error_requests: form.allow_user_view_error_requests,
     };
 

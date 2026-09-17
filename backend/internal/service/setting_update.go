@@ -445,8 +445,10 @@ func (s *SettingService) buildSystemSettingsUpdates(ctx context.Context, setting
 	updates[SettingKeyUserMenuRedeemEnabled] = strconv.FormatBool(settings.UserMenuRedeemEnabled)
 	updates[SettingKeyThemePreset] = NormalizeThemePreset(settings.ThemePreset)
 	updates[SettingKeyThemePrimaryColor] = NormalizeThemePrimaryColor(settings.ThemePrimaryColor)
+	updates[SettingKeyThemeSecondaryColor] = NormalizeThemeSecondaryColor(settings.ThemeSecondaryColor)
 	if updates[SettingKeyThemePreset] != ThemePresetCustom {
 		updates[SettingKeyThemePrimaryColor] = ResolveThemePrimaryColor(updates[SettingKeyThemePreset], updates[SettingKeyThemePrimaryColor])
+		updates[SettingKeyThemeSecondaryColor] = ResolveThemeSecondaryColor(updates[SettingKeyThemePreset], updates[SettingKeyThemeSecondaryColor])
 	}
 
 	// Affiliate (邀请返利) feature switch

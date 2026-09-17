@@ -360,6 +360,7 @@ type UpdateSettingsRequest struct {
 	UserMenuRedeemEnabled        *bool `json:"user_menu_redeem_enabled"`
 	ThemePreset                  *string `json:"theme_preset"`
 	ThemePrimaryColor            *string `json:"theme_primary_color"`
+	ThemeSecondaryColor          *string `json:"theme_secondary_color"`
 
 	// Affiliate (邀请返利) feature switch
 	AffiliateEnabled *bool `json:"affiliate_enabled"`
@@ -2000,6 +2001,12 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 			}
 			return previousSettings.ThemePrimaryColor
 		}(),
+		ThemeSecondaryColor: func() string {
+			if req.ThemeSecondaryColor != nil {
+				return service.NormalizeThemeSecondaryColor(*req.ThemeSecondaryColor)
+			}
+			return previousSettings.ThemeSecondaryColor
+		}(),
 		AffiliateEnabled: func() bool {
 			if req.AffiliateEnabled != nil {
 				return *req.AffiliateEnabled
@@ -2429,6 +2436,7 @@ func (h *SettingHandler) UpdateSettings(c *gin.Context) {
 		UserMenuRedeemEnabled: updatedSettings.UserMenuRedeemEnabled,
 		ThemePreset:                  updatedSettings.ThemePreset,
 		ThemePrimaryColor:            updatedSettings.ThemePrimaryColor,
+		ThemeSecondaryColor:          updatedSettings.ThemeSecondaryColor,
 
 		AffiliateEnabled: updatedSettings.AffiliateEnabled,
 

@@ -19,6 +19,22 @@
   --primary-rgb: 20 184 166;
   --primary-glow: rgba(20, 184, 166, 0.25);
   --primary-glow-lg: rgba(20, 184, 166, 0.35);
+  --on-primary: #ffffff;
+  --secondary-50-rgb: 240 253 250;
+  --secondary-100-rgb: 204 251 241;
+  --secondary-200-rgb: 153 246 228;
+  --secondary-300-rgb: 94 234 212;
+  --secondary-400-rgb: 45 212 191;
+  --secondary-500-rgb: 13 148 136;
+  --secondary-600-rgb: 15 118 110;
+  --secondary-700-rgb: 17 94 89;
+  --secondary-800-rgb: 19 78 74;
+  --secondary-900-rgb: 19 78 74;
+  --secondary-950-rgb: 4 47 46;
+  --color-secondary: #0d9488;
+  --secondary-rgb: 13 148 136;
+  --secondary-glow: rgba(13, 148, 136, 0.25);
+  --on-secondary: #ffffff;
   --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
 }
 
@@ -100,10 +116,15 @@
   }
 
   .btn-primary {
+    /* Keep fill on primary scale so light secondaries (cream/neon) stay accents, not button paint. */
     @apply bg-gradient-to-r from-primary-500 to-primary-600;
-    @apply text-white shadow-md shadow-primary-500/25;
+    @apply shadow-md shadow-primary-500/25;
     @apply hover:from-primary-600 hover:to-primary-700 hover:shadow-lg hover:shadow-primary-500/30;
     @apply dark:shadow-primary-500/20;
+    color: var(--on-primary, #ffffff);
+  }
+  .btn-primary:hover {
+    color: var(--on-primary, #ffffff);
   }
 
   .btn-secondary {
@@ -292,7 +313,7 @@
   }
 
   .stat-icon-primary {
-    @apply bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400;
+    @apply bg-primary-100 text-primary-600 dark:bg-primary-500/20 dark:text-primary-300;
   }
 
   .stat-icon-success {
@@ -365,7 +386,7 @@
   }
 
   .badge-primary {
-    @apply bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400;
+    @apply bg-primary-100 text-primary-700 dark:bg-primary-500/20 dark:text-primary-300;
   }
 
   .badge-success {
@@ -592,9 +613,9 @@
   }
 
   .sidebar-link-active {
-    @apply bg-primary-50 dark:bg-primary-900/20;
-    @apply text-primary-600 dark:text-primary-400;
-    @apply hover:bg-primary-100 dark:hover:bg-primary-900/30;
+    @apply bg-primary-50 dark:bg-primary-500/15;
+    @apply text-primary-600 dark:text-primary-300;
+    @apply hover:bg-primary-100 dark:hover:bg-primary-500/25;
   }
 
   .sidebar-section {
@@ -770,7 +791,7 @@
 @layer utilities {
   /* 文字渐变 */
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent;
   }
 
   /* 玻璃效果 */
