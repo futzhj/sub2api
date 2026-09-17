@@ -37,26 +37,26 @@
   --on-secondary: #ffffff;
   --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
 
-  /* Surface tokens (light / dark raw channels) — applyBrandTheme overwrites these */
-  --surface-page-light-rgb: 249 250 251;
+  /* Surface tokens (OmniRoute-like neutrals) — applyBrandTheme may soft-tint muted/border */
+  --surface-page-light-rgb: 249 249 251;
   --surface-card-light-rgb: 255 255 255;
-  --surface-sidebar-light-rgb: 255 255 255;
-  --surface-muted-light-rgb: 243 244 246;
+  --surface-sidebar-light-rgb: 245 245 250;
+  --surface-muted-light-rgb: 244 244 247;
   --surface-elevated-light-rgb: 255 255 255;
-  --surface-border-light-rgb: 229 231 235;
-  --text-primary-light: #0f172a;
-  --text-muted-light: #64748b;
-  --on-surface-light: #0f172a;
+  --surface-border-light-rgb: 235 235 235;
+  --text-primary-light: #1a1a2e;
+  --text-muted-light: #71717a;
+  --on-surface-light: #1a1a2e;
 
-  --surface-page-dark-rgb: 2 6 23;
-  --surface-card-dark-rgb: 30 41 59;
-  --surface-sidebar-dark-rgb: 15 23 42;
-  --surface-muted-dark-rgb: 30 41 59;
-  --surface-elevated-dark-rgb: 51 65 85;
-  --surface-border-dark-rgb: 51 65 85;
-  --text-primary-dark: #f1f5f9;
-  --text-muted-dark: #94a3b8;
-  --on-surface-dark: #f1f5f9;
+  --surface-page-dark-rgb: 11 14 20;
+  --surface-card-dark-rgb: 22 27 34;
+  --surface-sidebar-dark-rgb: 16 20 30;
+  --surface-muted-dark-rgb: 18 22 30;
+  --surface-elevated-dark-rgb: 28 34 44;
+  --surface-border-dark-rgb: 31 33 39;
+  --text-primary-dark: #e6e6ef;
+  --text-muted-dark: #a1a1aa;
+  --on-surface-dark: #e6e6ef;
 
   /* Active aliases (light by default; .dark swaps) */
   --surface-page-rgb: var(--surface-page-light-rgb);

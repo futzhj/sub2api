@@ -277,79 +277,53 @@ export type SurfaceTokens = {
 }
 
 /**
- * Derive light + dark UI chrome colors from a primary/secondary pair.
- * Lighter swatch drives light-mode page/sidebar; darker drives dark-mode surfaces.
+ * Fixed OmniRoute-like neutral chrome for light/dark modes.
+ * Brand primary may tint muted/border at ≤~5% — never recolors page/card/sidebar.
+ * `secondaryHex` is accepted for API compatibility but does not paint surfaces.
  */
-export function buildSurfaceTokens(primaryHex: string, secondaryHex: string): SurfaceTokens {
+const NEUTRAL_SURFACES = {
+  pageLight: '#f9f9fb',
+  cardLight: '#ffffff',
+  sidebarLight: '#f5f5fa',
+  mutedLight: '#f4f4f7',
+  elevatedLight: '#ffffff',
+  borderLight: '#ebebeb',
+  textPrimaryLight: '#1a1a2e',
+  textMutedLight: '#71717a',
+  pageDark: '#0b0e14',
+  cardDark: '#161b22',
+  sidebarDark: '#10141e',
+  mutedDark: '#12161e',
+  elevatedDark: '#1c222c',
+  borderDark: '#1f2127',
+  textPrimaryDark: '#e6e6ef',
+  textMutedDark: '#a1a1aa',
+} as const
+
+/** Max mix of primary into muted/border only (OmniRoute-style soft accent). */
+const SURFACE_PRIMARY_TINT = 0.05
+
+export function buildSurfaceTokens(primaryHex: string, _secondaryHex?: string): SurfaceTokens {
   const primary = normalizeThemePrimaryColor(primaryHex)
-  const secondary = normalizeThemeSecondaryColor(secondaryHex)
-  const lp = relativeLuminance(primary)
-  const ls = relativeLuminance(secondary)
-  const lighter = lp >= ls ? primary : secondary
-  const darker = lp >= ls ? secondary : primary
-  const lightL = Math.max(lp, ls)
-  const darkL = Math.min(lp, ls)
-
-  // Light mode: prefer cream/pastel partner as page; wash vivid colors toward white.
-  let pageLight: string
-  if (lightL >= 0.75) {
-    pageLight = mixHex(lighter, '#ffffff', 0.1)
-  } else if (lightL >= 0.4) {
-    pageLight = mixHex(lighter, '#ffffff', 0.88)
-  } else {
-    pageLight = mixHex(lighter, '#ffffff', 0.94)
-  }
-
-  const cardLight = lightL >= 0.75 ? '#ffffff' : mixHex(pageLight, '#ffffff', 0.72)
-  const sidebarLight =
-    lightL >= 0.75 ? mixHex(lighter, '#ffffff', 0.04) : mixHex(lighter, '#ffffff', 0.9)
-  const mutedLight = mixHex(pageLight, darker, lightL >= 0.75 ? 0.04 : 0.07)
-  const elevatedLight = mixHex(cardLight, '#ffffff', 0.35)
-  const borderLight = mixHex(mixHex(darker, '#cbd5e1', 0.55), '#e5e7eb', 0.35)
-
-  const textPrimaryLight = relativeLuminance(pageLight) > 0.55 ? '#0f172a' : '#f8fafc'
-  const textMutedLight = relativeLuminance(pageLight) > 0.55 ? '#64748b' : '#94a3b8'
-
-  // Dark mode: deepen the darker partner for page/sidebar (not washed gray).
-  let pageDark: string
-  if (darkL <= 0.06) {
-    pageDark = mixHex(darker, '#000000', 0.2)
-  } else if (darkL <= 0.2) {
-    pageDark = mixHex(darker, '#000000', 0.42)
-  } else {
-    pageDark = mixHex(darker, '#000000', 0.72)
-  }
-
-  const sidebarDark = mixHex(pageDark, darker, 0.28)
-  const cardDark = mixHex(mixHex(pageDark, '#ffffff', 0.1), lighter, 0.05)
-  const mutedDark = mixHex(pageDark, '#ffffff', 0.07)
-  const elevatedDark = mixHex(pageDark, '#ffffff', 0.14)
-  const borderDark = mixHex(darker, '#ffffff', darkL <= 0.15 ? 0.16 : 0.22)
-
-  const textPrimaryDark = relativeLuminance(pageDark) > 0.45 ? '#0f172a' : '#f1f5f9'
-  // Muted text: soft blend of light partner when it's bright, else slate
-  const textMutedDark =
-    relativeLuminance(lighter) > 0.65
-      ? mixHex(lighter, '#94a3b8', 0.45)
-      : '#94a3b8'
+  const tint = SURFACE_PRIMARY_TINT
 
   return {
-    pageLight,
-    cardLight,
-    sidebarLight,
-    mutedLight,
-    elevatedLight,
-    borderLight,
-    textPrimaryLight,
-    textMutedLight,
-    pageDark,
-    cardDark,
-    sidebarDark,
-    mutedDark,
-    elevatedDark,
-    borderDark,
-    textPrimaryDark,
-    textMutedDark,
+    pageLight: NEUTRAL_SURFACES.pageLight,
+    cardLight: NEUTRAL_SURFACES.cardLight,
+    sidebarLight: NEUTRAL_SURFACES.sidebarLight,
+    mutedLight: mixHex(NEUTRAL_SURFACES.mutedLight, primary, tint),
+    elevatedLight: NEUTRAL_SURFACES.elevatedLight,
+    borderLight: mixHex(NEUTRAL_SURFACES.borderLight, primary, tint),
+    textPrimaryLight: NEUTRAL_SURFACES.textPrimaryLight,
+    textMutedLight: NEUTRAL_SURFACES.textMutedLight,
+    pageDark: NEUTRAL_SURFACES.pageDark,
+    cardDark: NEUTRAL_SURFACES.cardDark,
+    sidebarDark: NEUTRAL_SURFACES.sidebarDark,
+    mutedDark: mixHex(NEUTRAL_SURFACES.mutedDark, primary, tint),
+    elevatedDark: NEUTRAL_SURFACES.elevatedDark,
+    borderDark: mixHex(NEUTRAL_SURFACES.borderDark, primary, tint),
+    textPrimaryDark: NEUTRAL_SURFACES.textPrimaryDark,
+    textMutedDark: NEUTRAL_SURFACES.textMutedDark,
   }
 }
 

@@ -81,25 +81,48 @@ describe('dual-tone presets', () => {
   })
 })
 
+function channelSpread(hex: string): number {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return Math.max(r, g, b) - Math.min(r, g, b)
+}
+
 describe('buildSurfaceTokens', () => {
-  it('uses cream secondary as light page for burgundy_cream', () => {
+  it('keeps OmniRoute-like neutral page/card/sidebar for burgundy_cream', () => {
     const s = buildSurfaceTokens('#470125', '#fffbea')
-    expect(relativeLuminance(s.pageLight)).toBeGreaterThan(0.85)
-    expect(relativeLuminance(s.pageDark)).toBeLessThan(0.15)
-    expect(relativeLuminance(s.pageLight)).toBeGreaterThan(relativeLuminance(s.pageDark))
+    expect(s.pageLight).toBe('#f9f9fb')
+    expect(s.cardLight).toBe('#ffffff')
+    expect(s.sidebarLight).toBe('#f5f5fa')
+    expect(s.pageDark).toBe('#0b0e14')
+    expect(s.cardDark).toBe('#161b22')
+    expect(s.sidebarDark).toBe('#10141e')
+    expect(relativeLuminance(s.pageLight)).toBeGreaterThan(0.9)
+    expect(relativeLuminance(s.pageDark)).toBeLessThan(0.05)
   })
 
-  it('deepens wasong green for dark page (not slate gray)', () => {
-    const s = buildSurfaceTokens('#4e8966', '#fffeee')
-    // pageDark should retain green hue bias vs pure gray of similar L
-    const [r, g, b] = [
-      parseInt(s.pageDark.slice(1, 3), 16),
-      parseInt(s.pageDark.slice(3, 5), 16),
-      parseInt(s.pageDark.slice(5, 7), 16),
-    ]
-    expect(g).toBeGreaterThan(r)
-    expect(g).toBeGreaterThanOrEqual(b)
-    expect(relativeLuminance(s.pageLight)).toBeGreaterThan(0.9)
+  it('does not paint neon/cream dual tones onto page chrome', () => {
+    const barbie = buildSurfaceTokens('#ff0086', '#f0ff0c')
+    const wasong = buildSurfaceTokens('#4e8966', '#fffeee')
+    // Fixed neutrals — identical page regardless of preset pair
+    expect(barbie.pageLight).toBe(wasong.pageLight)
+    expect(barbie.pageDark).toBe(wasong.pageDark)
+    expect(channelSpread(barbie.pageLight)).toBeLessThan(8)
+    expect(channelSpread(barbie.pageDark)).toBeLessThan(16)
+    // No cream (#fffbea-ish) or neon yellow page
+    expect(relativeLuminance(barbie.pageLight)).toBeLessThan(0.99)
+    expect(barbie.pageLight.toLowerCase()).not.toMatch(/^#fff[8-f]/)
+  })
+
+  it('only soft-tints muted/border with primary (≤~6% mix)', () => {
+    const s = buildSurfaceTokens('#ff0086', '#f0ff0c')
+    expect(s.mutedLight).not.toBe('#f4f4f7')
+    expect(s.borderLight).not.toBe('#ebebeb')
+    // Still near-neutral: channel spread stays modest
+    expect(channelSpread(s.mutedLight)).toBeLessThan(40)
+    expect(channelSpread(s.borderLight)).toBeLessThan(40)
+    expect(channelSpread(s.mutedDark)).toBeLessThan(40)
+    expect(channelSpread(s.borderDark)).toBeLessThan(40)
   })
 
   it('mixHex interpolates toward white', () => {
@@ -108,10 +131,12 @@ describe('buildSurfaceTokens', () => {
     expect(mixHex('#000000', '#ffffff', 0.5)).toBe('#808080')
   })
 
-  it('sets readable on-surface text for light and dark pages', () => {
+  it('sets OmniRoute text tokens for light and dark pages', () => {
     const s = buildSurfaceTokens('#ff0086', '#f0ff0c')
-    expect(s.textPrimaryLight).toBe('#0f172a')
-    expect(s.textPrimaryDark).toBe('#f1f5f9')
+    expect(s.textPrimaryLight).toBe('#1a1a2e')
+    expect(s.textMutedLight).toBe('#71717a')
+    expect(s.textPrimaryDark).toBe('#e6e6ef')
+    expect(s.textMutedDark).toBe('#a1a1aa')
   })
 })
 
@@ -123,23 +148,21 @@ describe('applyBrandTheme surfaces', () => {
     const pageDark = root.style.getPropertyValue('--surface-page-dark-rgb').trim()
     const textLight = root.style.getPropertyValue('--text-primary-light').trim()
     const textDark = root.style.getPropertyValue('--text-primary-dark').trim()
-    expect(pageLight).toMatch(/^\d+ \d+ \d+$/)
-    expect(pageDark).toMatch(/^\d+ \d+ \d+$/)
-    expect(pageLight).not.toBe(pageDark)
-    expect(textLight).toMatch(/^#/)
-    expect(textDark).toMatch(/^#/)
-    expect(root.style.getPropertyValue('--surface-card-light-rgb').trim()).toMatch(/^\d+ \d+ \d+$/)
-    expect(root.style.getPropertyValue('--surface-sidebar-dark-rgb').trim()).toMatch(/^\d+ \d+ \d+$/)
+    expect(pageLight).toBe('249 249 251')
+    expect(pageDark).toBe('11 14 20')
+    expect(textLight).toBe('#1a1a2e')
+    expect(textDark).toBe('#e6e6ef')
+    expect(root.style.getPropertyValue('--surface-card-light-rgb').trim()).toBe('255 255 255')
+    expect(root.style.getPropertyValue('--surface-sidebar-dark-rgb').trim()).toBe('16 20 30')
     expect(root.style.getPropertyValue('--surface-border-light-rgb').trim()).toMatch(/^\d+ \d+ \d+$/)
+    // Primary scale still applied
+    expect(root.style.getPropertyValue('--color-primary').trim()).toBe('#470125')
   })
 
-  it('applies custom primary+secondary surfaces', () => {
+  it('keeps custom page chrome neutral (ignores cream secondary)', () => {
     applyBrandTheme('custom', '#112233', '#ffeedd')
     const pageLight = document.documentElement.style.getPropertyValue('--surface-page-light-rgb').trim()
-    // cream-ish secondary → bright page channels
-    const parts = pageLight.split(' ').map(Number)
-    expect(parts[0]).toBeGreaterThan(200)
-    expect(parts[1]).toBeGreaterThan(200)
-    expect(parts[2]).toBeGreaterThan(180)
+    expect(pageLight).toBe('249 249 251')
+    expect(document.documentElement.style.getPropertyValue('--color-primary').trim()).toBe('#112233')
   })
 })
