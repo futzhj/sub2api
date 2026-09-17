@@ -1,7 +1,9 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-dark-950">
-    <!-- Background Decoration -->
-    <div class="pointer-events-none fixed inset-0 bg-mesh-gradient"></div>
+  <div class="min-h-screen bg-surface-page text-primary transition-colors">
+    <!-- Ambient macOS Atmosphere Glow -->
+    <div class="pointer-events-none fixed inset-0 opacity-30 dark:opacity-20 bg-mesh-gradient"></div>
+    <div class="pointer-events-none fixed -top-40 -right-40 h-[450px] w-[450px] rounded-full bg-primary-500/10 blur-[100px]"></div>
+    <div class="pointer-events-none fixed -bottom-40 -left-40 h-[450px] w-[450px] rounded-full bg-secondary-500/10 blur-[100px]"></div>
 
     <!-- Sidebar -->
     <AppSidebar />

@@ -6,12 +6,44 @@
       { '-translate-x-full lg:translate-x-0': !mobileOpen }
     ]"
   >
+    <!-- macOS Traffic Lights Header -->
+    <div
+      class="traffic-lights group transition-all duration-200"
+      :class="[sidebarCollapsed ? 'justify-center !px-0 pt-4 pb-2' : 'justify-start px-5 pt-3.5 pb-2']"
+      aria-label="macOS Window Controls"
+    >
+      <button
+        type="button"
+        class="traffic-light-btn traffic-light-close"
+        :title="mobileOpen ? '关闭菜单' : (sidebarCollapsed ? '展开' : '收起')"
+        @click="handleCloseOrHome"
+      >
+        <span class="traffic-light-symbol">×</span>
+      </button>
+      <button
+        type="button"
+        class="traffic-light-btn traffic-light-minimize"
+        :title="sidebarCollapsed ? '展开侧边栏' : '折叠侧边栏'"
+        @click="toggleSidebar"
+      >
+        <span class="traffic-light-symbol">−</span>
+      </button>
+      <button
+        type="button"
+        class="traffic-light-btn traffic-light-fullscreen"
+        title="切换全屏模式"
+        @click="toggleFullscreen"
+      >
+        <span class="traffic-light-symbol">+</span>
+      </button>
+    </div>
+
     <!-- Logo/Brand -->
     <div class="sidebar-header" :class="{ 'sidebar-header-collapsed': sidebarCollapsed }">
       <!-- Custom Logo or Default Logo -->
       <router-link
         :to="homePath"
-        class="sidebar-logo flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl shadow-glow transition-opacity hover:opacity-80"
+        class="sidebar-logo flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg shadow-sm transition-opacity hover:opacity-85"
         @click="handleMenuItemClick(homePath)"
       >
         <img v-if="settingsLoaded" :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
@@ -19,7 +51,7 @@
       <div class="sidebar-brand" :class="{ 'sidebar-brand-collapsed': sidebarCollapsed }" :aria-hidden="sidebarCollapsed ? 'true' : 'false'">
         <router-link
           :to="homePath"
-          class="sidebar-brand-title text-lg font-bold text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
+          class="sidebar-brand-title text-base font-semibold tracking-tight text-gray-900 transition-colors hover:text-primary-600 dark:text-white dark:hover:text-primary-400"
           @click="handleMenuItemClick(homePath)"
         >
           {{ siteName }}
@@ -730,7 +762,7 @@ function buildSelfNavItems(withDashboard: boolean): NavItem[] {
     { path: '/usage', label: t('nav.usage'), icon: ChartIcon, hideInSimpleMode: true },
     { path: '/available-channels', label: t('nav.availableChannels'), icon: ChannelIcon, hideInSimpleMode: true, featureFlag: flagAvailableChannels },
     { path: '/monitor', label: t('nav.channelStatus'), icon: SignalIcon, featureFlag: flagChannelMonitor },
-    { path: '/subscriptions', label: t('nav.mySubscriptions'), icon: CreditCardIcon, hideInSimpleMode: true, featureFlag: flagUserMenuSubscriptions },
+    { path: '/subscriptions', label: t('nav.mySubscriptions'), icon: CreditCardIcon, hideInSimpleMode: true, featureFlag: () => (flagSubscription() !== false && flagUserMenuSubscriptions() !== false), /* featureFlag: flagSubscription */ },
     { path: '/purchase', label: purchaseNavLabel.value, icon: RechargeSubscriptionIcon, hideInSimpleMode: true, featureFlag: flagPayment },
     { path: '/orders', label: t('nav.myOrders'), icon: OrderListIcon, hideInSimpleMode: true, featureFlag: flagPayment },
     { path: '/redeem', label: t('nav.redeem'), icon: GiftIcon, hideInSimpleMode: true, featureFlag: flagUserMenuRedeem },
@@ -863,6 +895,22 @@ const adminNavItems = computed((): NavItem[] => {
 
 function toggleSidebar() {
   appStore.toggleSidebar()
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    void document.documentElement.requestFullscreen().catch(() => {})
+  } else {
+    void document.exitFullscreen().catch(() => {})
+  }
+}
+
+function handleCloseOrHome() {
+  if (mobileOpen.value) {
+    closeMobile()
+  } else {
+    toggleSidebar()
+  }
 }
 
 function toggleTheme() {

@@ -74,16 +74,14 @@ export default {
       },
       fontFamily: {
         sans: [
-          'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'Arial',
-          'PingFang SC',
-          'Hiragino Sans GB',
-          'Microsoft YaHei',
+          '"SF Pro Text"',
+          '"SF Pro Display"',
+          '"PingFang SC"',
+          '"Hiragino Sans GB"',
+          '"Microsoft YaHei"',
+          'system-ui',
           'sans-serif'
         ],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
@@ -93,8 +91,12 @@ export default {
         'glass-sm': '0 4px 16px rgba(0, 0, 0, 0.06)',
         glow: '0 0 20px var(--primary-glow, rgba(20, 184, 166, 0.25))',
         'glow-lg': '0 0 40px var(--primary-glow-lg, rgba(20, 184, 166, 0.35))',
-        card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 10px 40px rgba(0, 0, 0, 0.08)',
+        card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 6px 20px -2px rgba(0, 0, 0, 0.05)',
+        'card-hover': '0 2px 6px rgba(0, 0, 0, 0.06), 0 14px 32px -4px rgba(0, 0, 0, 0.08)',
+        'mac-card': '0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px -4px rgba(0, 0, 0, 0.06)',
+        'mac-card-hover': '0 4px 12px rgba(0, 0, 0, 0.06), 0 16px 36px -4px rgba(0, 0, 0, 0.1)',
+        'mac-window': '0 24px 60px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06)',
+        'mac-popover': '0 12px 36px -4px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05)',
         'inner-glow': 'inset 0 1px 0 rgba(255, 255, 255, 0.1)'
       },
       backgroundImage: {
