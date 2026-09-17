@@ -249,6 +249,110 @@ export function onColorFor(hex: string): string {
   return relativeLuminance(hex) > 0.55 ? '#0f172a' : '#ffffff'
 }
 
+/** Linear mix of two hex colors; t=0 → a, t=1 → b. */
+export function mixHex(a: string, b: string, t: number): string {
+  const tt = Math.max(0, Math.min(1, t))
+  const [ar, ag, ab] = hexToRgb(a)
+  const [br, bg, bb] = hexToRgb(b)
+  return rgbToHex(ar + (br - ar) * tt, ag + (bg - ag) * tt, ab + (bb - ab) * tt)
+}
+
+export type SurfaceTokens = {
+  pageLight: string
+  cardLight: string
+  sidebarLight: string
+  mutedLight: string
+  elevatedLight: string
+  borderLight: string
+  textPrimaryLight: string
+  textMutedLight: string
+  pageDark: string
+  cardDark: string
+  sidebarDark: string
+  mutedDark: string
+  elevatedDark: string
+  borderDark: string
+  textPrimaryDark: string
+  textMutedDark: string
+}
+
+/**
+ * Derive light + dark UI chrome colors from a primary/secondary pair.
+ * Lighter swatch drives light-mode page/sidebar; darker drives dark-mode surfaces.
+ */
+export function buildSurfaceTokens(primaryHex: string, secondaryHex: string): SurfaceTokens {
+  const primary = normalizeThemePrimaryColor(primaryHex)
+  const secondary = normalizeThemeSecondaryColor(secondaryHex)
+  const lp = relativeLuminance(primary)
+  const ls = relativeLuminance(secondary)
+  const lighter = lp >= ls ? primary : secondary
+  const darker = lp >= ls ? secondary : primary
+  const lightL = Math.max(lp, ls)
+  const darkL = Math.min(lp, ls)
+
+  // Light mode: prefer cream/pastel partner as page; wash vivid colors toward white.
+  let pageLight: string
+  if (lightL >= 0.75) {
+    pageLight = mixHex(lighter, '#ffffff', 0.1)
+  } else if (lightL >= 0.4) {
+    pageLight = mixHex(lighter, '#ffffff', 0.88)
+  } else {
+    pageLight = mixHex(lighter, '#ffffff', 0.94)
+  }
+
+  const cardLight = lightL >= 0.75 ? '#ffffff' : mixHex(pageLight, '#ffffff', 0.72)
+  const sidebarLight =
+    lightL >= 0.75 ? mixHex(lighter, '#ffffff', 0.04) : mixHex(lighter, '#ffffff', 0.9)
+  const mutedLight = mixHex(pageLight, darker, lightL >= 0.75 ? 0.04 : 0.07)
+  const elevatedLight = mixHex(cardLight, '#ffffff', 0.35)
+  const borderLight = mixHex(mixHex(darker, '#cbd5e1', 0.55), '#e5e7eb', 0.35)
+
+  const textPrimaryLight = relativeLuminance(pageLight) > 0.55 ? '#0f172a' : '#f8fafc'
+  const textMutedLight = relativeLuminance(pageLight) > 0.55 ? '#64748b' : '#94a3b8'
+
+  // Dark mode: deepen the darker partner for page/sidebar (not washed gray).
+  let pageDark: string
+  if (darkL <= 0.06) {
+    pageDark = mixHex(darker, '#000000', 0.2)
+  } else if (darkL <= 0.2) {
+    pageDark = mixHex(darker, '#000000', 0.42)
+  } else {
+    pageDark = mixHex(darker, '#000000', 0.72)
+  }
+
+  const sidebarDark = mixHex(pageDark, darker, 0.28)
+  const cardDark = mixHex(mixHex(pageDark, '#ffffff', 0.1), lighter, 0.05)
+  const mutedDark = mixHex(pageDark, '#ffffff', 0.07)
+  const elevatedDark = mixHex(pageDark, '#ffffff', 0.14)
+  const borderDark = mixHex(darker, '#ffffff', darkL <= 0.15 ? 0.16 : 0.22)
+
+  const textPrimaryDark = relativeLuminance(pageDark) > 0.45 ? '#0f172a' : '#f1f5f9'
+  // Muted text: soft blend of light partner when it's bright, else slate
+  const textMutedDark =
+    relativeLuminance(lighter) > 0.65
+      ? mixHex(lighter, '#94a3b8', 0.45)
+      : '#94a3b8'
+
+  return {
+    pageLight,
+    cardLight,
+    sidebarLight,
+    mutedLight,
+    elevatedLight,
+    borderLight,
+    textPrimaryLight,
+    textMutedLight,
+    pageDark,
+    cardDark,
+    sidebarDark,
+    mutedDark,
+    elevatedDark,
+    borderDark,
+    textPrimaryDark,
+    textMutedDark,
+  }
+}
+
 function applyScaleVars(
   root: HTMLElement,
   prefix: 'primary' | 'secondary',
@@ -263,6 +367,32 @@ function applyScaleVars(
   root.style.setProperty(`--${prefix}-rgb`, hexToRgbChannels(baseHex))
 }
 
+function applySurfaceVars(root: HTMLElement, surfaces: SurfaceTokens): void {
+  const pairs: Array<[string, string]> = [
+    ['--surface-page-light-rgb', surfaces.pageLight],
+    ['--surface-card-light-rgb', surfaces.cardLight],
+    ['--surface-sidebar-light-rgb', surfaces.sidebarLight],
+    ['--surface-muted-light-rgb', surfaces.mutedLight],
+    ['--surface-elevated-light-rgb', surfaces.elevatedLight],
+    ['--surface-border-light-rgb', surfaces.borderLight],
+    ['--surface-page-dark-rgb', surfaces.pageDark],
+    ['--surface-card-dark-rgb', surfaces.cardDark],
+    ['--surface-sidebar-dark-rgb', surfaces.sidebarDark],
+    ['--surface-muted-dark-rgb', surfaces.mutedDark],
+    ['--surface-elevated-dark-rgb', surfaces.elevatedDark],
+    ['--surface-border-dark-rgb', surfaces.borderDark],
+  ]
+  for (const [name, hex] of pairs) {
+    root.style.setProperty(name, hexToRgbChannels(hex))
+  }
+  root.style.setProperty('--text-primary-light', surfaces.textPrimaryLight)
+  root.style.setProperty('--text-muted-light', surfaces.textMutedLight)
+  root.style.setProperty('--text-primary-dark', surfaces.textPrimaryDark)
+  root.style.setProperty('--text-muted-dark', surfaces.textMutedDark)
+  root.style.setProperty('--on-surface-light', surfaces.textPrimaryLight)
+  root.style.setProperty('--on-surface-dark', surfaces.textPrimaryDark)
+}
+
 /** Apply brand primary + secondary palettes onto documentElement CSS variables. */
 export function applyBrandTheme(
   preset?: string | null,
@@ -273,10 +403,12 @@ export function applyBrandTheme(
   const { primary, secondary } = resolveThemePalette(preset, customPrimary, customSecondary)
   const primaryScale = buildPrimaryScale(primary)
   const secondaryScale = buildSecondaryScale(secondary)
+  const surfaces = buildSurfaceTokens(primary, secondary)
   const root = document.documentElement
 
   applyScaleVars(root, 'primary', primary, primaryScale)
   applyScaleVars(root, 'secondary', secondary, secondaryScale)
+  applySurfaceVars(root, surfaces)
 
   const [r, g, b] = hexToRgb(primary)
   const [sr, sg, sb] = hexToRgb(secondary)

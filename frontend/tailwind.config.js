@@ -47,7 +47,7 @@ export default {
           900: '#0f172a',
           950: '#020617'
         },
-        // 深色模式背景
+        // 深色模式背景（legacy slate; prefer surface-* brand tokens for chrome）
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -60,6 +60,16 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
           950: '#020617'
+        },
+        // Brand-driven UI surfaces (light/dark swapped via CSS aliases on .dark)
+        surface: {
+          DEFAULT: 'rgb(var(--surface-page-rgb) / <alpha-value>)',
+          page: 'rgb(var(--surface-page-rgb) / <alpha-value>)',
+          card: 'rgb(var(--surface-card-rgb) / <alpha-value>)',
+          sidebar: 'rgb(var(--surface-sidebar-rgb) / <alpha-value>)',
+          muted: 'rgb(var(--surface-muted-rgb) / <alpha-value>)',
+          elevated: 'rgb(var(--surface-elevated-rgb) / <alpha-value>)',
+          border: 'rgb(var(--surface-border-rgb) / <alpha-value>)'
         }
       },
       fontFamily: {

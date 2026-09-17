@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Default brand primary (teal) — overridden at runtime from public settings */
+/* Default brand primary (teal) + surfaces — overridden at runtime from public settings */
 :root {
   --primary-50-rgb: 240 253 250;
   --primary-100-rgb: 204 251 241;
@@ -36,11 +36,55 @@
   --secondary-glow: rgba(13, 148, 136, 0.25);
   --on-secondary: #ffffff;
   --gradient-primary: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+
+  /* Surface tokens (light / dark raw channels) — applyBrandTheme overwrites these */
+  --surface-page-light-rgb: 249 250 251;
+  --surface-card-light-rgb: 255 255 255;
+  --surface-sidebar-light-rgb: 255 255 255;
+  --surface-muted-light-rgb: 243 244 246;
+  --surface-elevated-light-rgb: 255 255 255;
+  --surface-border-light-rgb: 229 231 235;
+  --text-primary-light: #0f172a;
+  --text-muted-light: #64748b;
+  --on-surface-light: #0f172a;
+
+  --surface-page-dark-rgb: 2 6 23;
+  --surface-card-dark-rgb: 30 41 59;
+  --surface-sidebar-dark-rgb: 15 23 42;
+  --surface-muted-dark-rgb: 30 41 59;
+  --surface-elevated-dark-rgb: 51 65 85;
+  --surface-border-dark-rgb: 51 65 85;
+  --text-primary-dark: #f1f5f9;
+  --text-muted-dark: #94a3b8;
+  --on-surface-dark: #f1f5f9;
+
+  /* Active aliases (light by default; .dark swaps) */
+  --surface-page-rgb: var(--surface-page-light-rgb);
+  --surface-card-rgb: var(--surface-card-light-rgb);
+  --surface-sidebar-rgb: var(--surface-sidebar-light-rgb);
+  --surface-muted-rgb: var(--surface-muted-light-rgb);
+  --surface-elevated-rgb: var(--surface-elevated-light-rgb);
+  --surface-border-rgb: var(--surface-border-light-rgb);
+  --text-primary: var(--text-primary-light);
+  --text-muted: var(--text-muted-light);
+  --on-surface: var(--on-surface-light);
+}
+
+.dark {
+  --surface-page-rgb: var(--surface-page-dark-rgb);
+  --surface-card-rgb: var(--surface-card-dark-rgb);
+  --surface-sidebar-rgb: var(--surface-sidebar-dark-rgb);
+  --surface-muted-rgb: var(--surface-muted-dark-rgb);
+  --surface-elevated-rgb: var(--surface-elevated-dark-rgb);
+  --surface-border-rgb: var(--surface-border-dark-rgb);
+  --text-primary: var(--text-primary-dark);
+  --text-muted: var(--text-muted-dark);
+  --on-surface: var(--on-surface-dark);
 }
 
 @layer base {
   * {
-    @apply border-gray-200 dark:border-dark-700;
+    border-color: rgb(var(--surface-border-rgb));
   }
 
   html {
@@ -53,8 +97,9 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-dark-950 dark:text-gray-100;
     @apply min-h-screen;
+    background-color: rgb(var(--surface-page-rgb));
+    color: var(--text-primary);
   }
 
   /* 自定义滚动条 - 仅针对 Firefox，避免 Chrome 取消 webkit 的全局定制 */
@@ -128,16 +173,23 @@
   }
 
   .btn-secondary {
-    @apply bg-white dark:bg-dark-800;
-    @apply text-gray-700 dark:text-gray-200;
-    @apply border border-gray-200 dark:border-dark-600;
-    @apply shadow-sm hover:bg-gray-50 dark:hover:bg-dark-700;
-    @apply hover:border-gray-300 dark:hover:border-dark-500;
+    @apply shadow-sm;
+    background-color: rgb(var(--surface-card-rgb));
+    color: var(--text-primary);
+    border: 1px solid rgb(var(--surface-border-rgb));
+  }
+  .btn-secondary:hover {
+    background-color: rgb(var(--surface-muted-rgb));
+    border-color: rgb(var(--surface-border-rgb));
   }
 
   .btn-ghost {
-    @apply bg-transparent text-gray-600 dark:text-gray-300;
-    @apply hover:bg-gray-100 dark:hover:bg-dark-800;
+    @apply bg-transparent;
+    color: var(--text-muted);
+  }
+  .btn-ghost:hover {
+    background-color: rgb(var(--surface-muted-rgb));
+    color: var(--text-primary);
   }
 
   .btn-danger {
@@ -207,13 +259,19 @@
   /* ============ 输入框样式 ============ */
   .input {
     @apply w-full rounded-xl px-4 py-2.5 text-sm;
-    @apply bg-white dark:bg-dark-800;
-    @apply border border-gray-200 dark:border-dark-600;
-    @apply text-gray-900 dark:text-gray-100;
-    @apply placeholder:text-gray-400 dark:placeholder:text-dark-400;
     @apply transition-all duration-200;
     @apply focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30;
-    @apply disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-dark-900;
+    @apply disabled:cursor-not-allowed;
+    background-color: rgb(var(--surface-card-rgb));
+    border: 1px solid rgb(var(--surface-border-rgb));
+    color: var(--text-primary);
+  }
+  .input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.75;
+  }
+  .input:disabled {
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   .dark .input[type='date'],
@@ -229,11 +287,13 @@
   }
 
   .input-label {
-    @apply mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300;
+    @apply mb-1.5 block text-sm font-medium;
+    color: var(--text-primary);
   }
 
   .input-hint {
-    @apply mt-1 text-xs text-gray-500 dark:text-dark-400;
+    @apply mt-1 text-xs;
+    color: var(--text-muted);
   }
 
   .input-error-text {
@@ -253,42 +313,45 @@
 
   /* ============ 玻璃效果 ============ */
   .glass {
-    @apply bg-white/80 backdrop-blur-xl dark:bg-dark-800/80;
+    @apply backdrop-blur-xl;
+    background-color: rgb(var(--surface-card-rgb) / 0.8);
   }
 
   .glass-card {
-    @apply bg-white/70 dark:bg-dark-800/70;
     @apply backdrop-blur-xl;
     @apply rounded-2xl;
-    @apply border border-white/20 dark:border-dark-700/50;
     @apply shadow-glass;
     @apply transition-all duration-300;
+    background-color: rgb(var(--surface-card-rgb) / 0.7);
+    border: 1px solid rgb(var(--surface-border-rgb) / 0.5);
   }
 
   /* ============ 卡片样式 ============ */
   .card {
-    @apply bg-white dark:bg-dark-800/50;
     @apply rounded-2xl;
-    @apply border border-gray-100 dark:border-dark-700/50;
     @apply shadow-card;
     @apply transition-all duration-300;
+    background-color: rgb(var(--surface-card-rgb));
+    border: 1px solid rgb(var(--surface-border-rgb) / 0.85);
   }
 
   .card-hover {
     @apply hover:-translate-y-0.5 hover:shadow-card-hover;
-    @apply hover:border-gray-200 dark:hover:border-dark-600;
+  }
+  .card-hover:hover {
+    border-color: rgb(var(--surface-border-rgb));
   }
 
   .card-glass {
-    @apply bg-white/70 dark:bg-dark-800/70;
     @apply backdrop-blur-xl;
-    @apply border border-white/20 dark:border-dark-700/50;
     @apply shadow-glass;
+    background-color: rgb(var(--surface-card-rgb) / 0.7);
+    border: 1px solid rgb(var(--surface-border-rgb) / 0.5);
   }
 
   .card-header {
-    @apply border-b border-gray-100 dark:border-dark-700;
     @apply px-6 py-4;
+    border-bottom: 1px solid rgb(var(--surface-border-rgb) / 0.85);
   }
 
   .card-body {
@@ -296,8 +359,8 @@
   }
 
   .card-footer {
-    @apply border-t border-gray-100 dark:border-dark-700;
     @apply px-6 py-4;
+    border-top: 1px solid rgb(var(--surface-border-rgb) / 0.85);
   }
 
   /* ============ 统计卡片 ============ */
@@ -329,11 +392,13 @@
   }
 
   .stat-value {
-    @apply text-2xl font-bold text-gray-900 dark:text-white truncate;
+    @apply text-2xl font-bold truncate;
+    color: var(--text-primary);
   }
 
   .stat-label {
-    @apply text-sm text-gray-500 dark:text-dark-400;
+    @apply text-sm;
+    color: var(--text-muted);
   }
 
   .stat-trend {
@@ -350,7 +415,8 @@
 
   /* ============ 表格样式 ============ */
   .table-container {
-    @apply overflow-x-auto rounded-xl border border-gray-200 dark:border-dark-700;
+    @apply overflow-x-auto rounded-xl;
+    border: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .table {
@@ -359,15 +425,15 @@
 
   .table th {
     @apply px-4 py-3 text-left font-medium;
-    @apply text-gray-600 dark:text-dark-300;
-    @apply bg-gray-50 dark:bg-dark-800/50;
-    @apply border-b border-gray-200 dark:border-dark-700;
+    color: var(--text-muted);
+    background-color: rgb(var(--surface-muted-rgb));
+    border-bottom: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .table td {
     @apply px-4 py-3;
-    @apply text-gray-700 dark:text-gray-300;
-    @apply border-b border-gray-100 dark:border-dark-800;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgb(var(--surface-border-rgb) / 0.65);
   }
 
   .table tr:last-child td {
@@ -376,7 +442,9 @@
 
   .table tbody tr {
     @apply transition-colors duration-150;
-    @apply hover:bg-gray-50 dark:hover:bg-dark-800/30;
+  }
+  .table tbody tr:hover {
+    background-color: rgb(var(--surface-muted-rgb) / 0.55);
   }
 
   /* ============ 徽章样式 ============ */
@@ -402,7 +470,8 @@
   }
 
   .badge-gray {
-    @apply bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-dark-300;
+    background-color: rgb(var(--surface-muted-rgb));
+    color: var(--text-muted);
   }
 
   .badge-purple {
@@ -412,20 +481,22 @@
   /* ============ 下拉菜单 ============ */
   .dropdown {
     @apply absolute z-50;
-    @apply bg-white dark:bg-dark-800;
     @apply rounded-xl;
-    @apply border border-gray-200 dark:border-dark-700;
     @apply shadow-lg;
     @apply py-1;
     @apply origin-top-right animate-scale-in;
+    background-color: rgb(var(--surface-elevated-rgb));
+    border: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .dropdown-item {
     @apply px-4 py-2 text-sm;
-    @apply text-gray-700 dark:text-gray-300;
-    @apply hover:bg-gray-100 dark:hover:bg-dark-700;
     @apply cursor-pointer transition-colors;
     @apply flex items-center gap-2;
+    color: var(--text-primary);
+  }
+  .dropdown-item:hover {
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   /* ============ 模态框 ============ */
@@ -438,21 +509,23 @@
   .modal-content {
     @apply w-full;
     @apply max-h-[95vh] sm:max-h-[90vh];
-    @apply bg-white dark:bg-dark-800;
     @apply rounded-2xl shadow-2xl;
-    @apply border border-gray-200 dark:border-dark-700;
     @apply flex flex-col;
+    background-color: rgb(var(--surface-card-rgb));
+    border: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .modal-header {
-    @apply border-b border-gray-200 px-4 py-3 dark:border-dark-700;
+    @apply px-4 py-3;
     @apply sm:px-6 sm:py-4;
     @apply flex items-center justify-between;
     @apply flex-shrink-0;
+    border-bottom: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .modal-title {
-    @apply text-lg font-semibold text-gray-900 dark:text-white;
+    @apply text-lg font-semibold;
+    color: var(--text-primary);
   }
 
   .modal-body {
@@ -462,10 +535,11 @@
   }
 
   .modal-footer {
-    @apply border-t border-gray-200 px-4 py-3 dark:border-dark-700;
+    @apply px-4 py-3;
     @apply sm:px-6 sm:py-4;
     @apply flex items-center justify-end gap-3;
     @apply flex-shrink-0;
+    border-top: 1px solid rgb(var(--surface-border-rgb));
   }
 
   /* 防止body滚动的工具类 */
@@ -531,13 +605,15 @@
   .dialog-container {
     @apply flex w-full flex-col;
     @apply max-h-[90vh];
-    @apply rounded-2xl bg-white dark:bg-dark-800;
+    @apply rounded-2xl;
     @apply shadow-xl;
+    background-color: rgb(var(--surface-card-rgb));
   }
 
   .dialog-header {
-    @apply border-b border-gray-100 px-6 py-4 dark:border-dark-700;
+    @apply px-6 py-4;
     @apply flex items-center justify-between;
+    border-bottom: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .dialog-body {
@@ -545,20 +621,21 @@
   }
 
   .dialog-footer {
-    @apply border-t border-gray-100 px-6 py-4 dark:border-dark-700;
-    @apply bg-gray-50/60 dark:bg-dark-900/40;
+    @apply px-6 py-4;
     @apply flex items-center justify-end gap-3;
+    border-top: 1px solid rgb(var(--surface-border-rgb));
+    background-color: rgb(var(--surface-muted-rgb) / 0.6);
   }
 
   /* ============ Toast 通知 ============ */
   .toast {
     @apply fixed right-4 top-4 z-[100];
     @apply min-w-[320px] max-w-md;
-    @apply bg-white dark:bg-dark-800;
     @apply rounded-xl shadow-lg;
     @apply border-l-4;
     @apply p-4;
     @apply animate-slide-in-right;
+    background-color: rgb(var(--surface-elevated-rgb));
   }
 
   .toast-success {
@@ -580,17 +657,18 @@
   /* ============ 侧边栏 ============ */
   .sidebar {
     @apply fixed inset-y-0 left-0 z-40;
-    @apply w-64 bg-white dark:bg-dark-900;
-    @apply border-r border-gray-200 dark:border-dark-800;
+    @apply w-64;
     @apply flex flex-col;
     @apply transition-transform duration-300;
     transition-property: width, transform;
+    background-color: rgb(var(--surface-sidebar-rgb));
+    border-right: 1px solid rgb(var(--surface-border-rgb));
   }
 
   .sidebar-header {
     @apply h-16 px-6;
     @apply flex items-center gap-3;
-    @apply border-b border-gray-100 dark:border-dark-800;
+    border-bottom: 1px solid rgb(var(--surface-border-rgb) / 0.85);
     transition:
       padding 0.2s ease,
       gap 0.2s ease;
@@ -604,12 +682,14 @@
     @apply flex items-center gap-3 rounded-xl py-2.5;
     @apply overflow-hidden;
     @apply text-sm font-medium;
-    @apply text-gray-600 dark:text-dark-300;
     @apply transition-all duration-200;
-    @apply hover:bg-gray-100 dark:hover:bg-dark-800;
-    @apply hover:text-gray-900 dark:hover:text-white;
+    color: var(--text-muted);
     padding-left: 1.0625rem;
     padding-right: 0.875rem;
+  }
+  .sidebar-link:hover {
+    background-color: rgb(var(--surface-muted-rgb));
+    color: var(--text-primary);
   }
 
   .sidebar-link-active {
@@ -625,7 +705,8 @@
   .sidebar-section-title {
     @apply mb-2 px-3;
     @apply text-xs font-semibold uppercase tracking-wider;
-    @apply text-gray-400 dark:text-dark-500;
+    color: var(--text-muted);
+    opacity: 0.85;
   }
 
   /* ============ 页面头部 ============ */
@@ -634,11 +715,13 @@
   }
 
   .page-title {
-    @apply text-2xl font-bold text-gray-900 dark:text-white;
+    @apply text-2xl font-bold;
+    color: var(--text-primary);
   }
 
   .page-description {
-    @apply mt-1 text-sm text-gray-500 dark:text-dark-400;
+    @apply mt-1 text-sm;
+    color: var(--text-muted);
   }
 
   /* ============ 空状态 ============ */
@@ -649,15 +732,18 @@
 
   .empty-state-icon {
     @apply mb-4 h-16 w-16;
-    @apply text-gray-300 dark:text-dark-600;
+    color: var(--text-muted);
+    opacity: 0.45;
   }
 
   .empty-state-title {
-    @apply mb-1 text-lg font-medium text-gray-900 dark:text-white;
+    @apply mb-1 text-lg font-medium;
+    color: var(--text-primary);
   }
 
   .empty-state-description {
-    @apply max-w-sm text-sm text-gray-500 dark:text-dark-400;
+    @apply max-w-sm text-sm;
+    color: var(--text-muted);
   }
 
   /* ============ 加载状态 ============ */
@@ -667,36 +753,42 @@
   }
 
   .skeleton {
-    @apply animate-pulse rounded bg-gray-200 dark:bg-dark-700;
+    @apply animate-pulse rounded;
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   /* ============ 分隔线 ============ */
   .divider {
-    @apply my-4 h-px bg-gray-200 dark:bg-dark-700;
+    @apply my-4 h-px;
+    background-color: rgb(var(--surface-border-rgb));
   }
 
   /* ============ 标签页 ============ */
   .tabs {
     @apply flex gap-1 p-1;
-    @apply rounded-xl bg-gray-100 dark:bg-dark-800;
+    @apply rounded-xl;
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   .tab {
     @apply rounded-lg px-4 py-2 text-sm font-medium;
-    @apply text-gray-600 dark:text-dark-400;
     @apply transition-all duration-200;
-    @apply hover:text-gray-900 dark:hover:text-white;
+    color: var(--text-muted);
+  }
+  .tab:hover {
+    color: var(--text-primary);
   }
 
   .tab-active {
-    @apply bg-white dark:bg-dark-700;
-    @apply text-gray-900 dark:text-white;
     @apply shadow-sm;
+    background-color: rgb(var(--surface-card-rgb));
+    color: var(--text-primary);
   }
 
   /* ============ 进度条 ============ */
   .progress {
-    @apply h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-dark-700;
+    @apply h-2 overflow-hidden rounded-full;
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   .progress-bar {
@@ -707,8 +799,8 @@
   /* ============ 开关 ============ */
   .switch {
     @apply relative h-6 w-11 cursor-pointer rounded-full;
-    @apply bg-gray-300 dark:bg-dark-600;
     @apply transition-colors duration-200;
+    background-color: rgb(var(--surface-border-rgb));
   }
 
   .switch-active {
@@ -728,9 +820,9 @@
   /* ============ 代码块 ============ */
   .code {
     @apply font-mono text-sm;
-    @apply bg-gray-100 dark:bg-dark-800;
     @apply rounded px-1.5 py-0.5;
     @apply text-primary-600 dark:text-primary-400;
+    background-color: rgb(var(--surface-muted-rgb));
   }
 
   .code-block {
@@ -741,7 +833,8 @@
 
   /* ============ Tour Description ============ */
   .tour-step-description {
-    @apply space-y-3 text-sm leading-relaxed text-gray-700 dark:text-gray-200;
+    @apply space-y-3 text-sm leading-relaxed;
+    color: var(--text-primary);
   }
 
   .tour-step-description ul {
@@ -794,9 +887,10 @@
     @apply bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent;
   }
 
-  /* 玻璃效果 */
+  /* 玻璃效果 (utilities) */
   .glass {
-    @apply bg-white/80 backdrop-blur-xl dark:bg-dark-800/80;
+    @apply backdrop-blur-xl;
+    background-color: rgb(var(--surface-card-rgb) / 0.8);
   }
 
   /* 隐藏滚动条 */
