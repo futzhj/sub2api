@@ -392,6 +392,7 @@ func (h *SettingHandler) GetSettings(c *gin.Context) {
 		UserMenuRedeemEnabled: settings.UserMenuRedeemEnabled,
 		ThemePreset:                  settings.ThemePreset,
 		ThemePrimaryColor:            settings.ThemePrimaryColor,
+		ThemeSecondaryColor:          settings.ThemeSecondaryColor,
 		ModelPlazaDescription:   settings.ModelPlazaDescription,
 
 		AffiliateEnabled: settings.AffiliateEnabled,

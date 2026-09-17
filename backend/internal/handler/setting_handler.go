@@ -122,6 +122,7 @@ func (h *SettingHandler) GetPublicSettings(c *gin.Context) {
 		UserMenuRedeemEnabled:        settings.UserMenuRedeemEnabled,
 		ThemePreset:                  settings.ThemePreset,
 		ThemePrimaryColor:            settings.ThemePrimaryColor,
+		ThemeSecondaryColor:          settings.ThemeSecondaryColor,
 
 		AffiliateEnabled: settings.AffiliateEnabled,
 

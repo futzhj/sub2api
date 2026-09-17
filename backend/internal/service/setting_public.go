@@ -243,6 +243,7 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		SettingKeyUserMenuRedeemEnabled,
 		SettingKeyThemePreset,
 		SettingKeyThemePrimaryColor,
+		SettingKeyThemeSecondaryColor,
 		SettingKeyAffiliateEnabled,
 		SettingKeyRiskControlEnabled,
 		SettingKeyAllowUserViewErrorRequests,
@@ -379,8 +380,9 @@ func (s *SettingService) GetPublicSettings(ctx context.Context) (*PublicSettings
 		UserMenuSubscriptionsEnabled: !isFalseSettingValue(settings[SettingKeyUserMenuSubscriptionsEnabled]),
 		UserMenuRedeemEnabled:        !isFalseSettingValue(settings[SettingKeyUserMenuRedeemEnabled]),
 
-		ThemePreset:       NormalizeThemePreset(settings[SettingKeyThemePreset]),
-		ThemePrimaryColor: ResolveThemePrimaryColor(NormalizeThemePreset(settings[SettingKeyThemePreset]), settings[SettingKeyThemePrimaryColor]),
+		ThemePreset:         NormalizeThemePreset(settings[SettingKeyThemePreset]),
+		ThemePrimaryColor:   ResolveThemePrimaryColor(NormalizeThemePreset(settings[SettingKeyThemePreset]), settings[SettingKeyThemePrimaryColor]),
+		ThemeSecondaryColor: ResolveThemeSecondaryColor(NormalizeThemePreset(settings[SettingKeyThemePreset]), settings[SettingKeyThemeSecondaryColor]),
 
 		AffiliateEnabled: settings[SettingKeyAffiliateEnabled] == "true",
 
@@ -654,6 +656,7 @@ type PublicSettingsInjectionPayload struct {
 	UserMenuRedeemEnabled         bool `json:"user_menu_redeem_enabled"`
 	ThemePreset                   string `json:"theme_preset"`
 	ThemePrimaryColor             string `json:"theme_primary_color"`
+	ThemeSecondaryColor           string `json:"theme_secondary_color"`
 	AffiliateEnabled              bool `json:"affiliate_enabled"`
 	RiskControlEnabled            bool `json:"risk_control_enabled"`
 	AllowUserViewErrorRequests    bool `json:"allow_user_view_error_requests"`
@@ -742,6 +745,7 @@ func (s *SettingService) GetPublicSettingsForInjection(ctx context.Context) (any
 		UserMenuRedeemEnabled:                settings.UserMenuRedeemEnabled,
 		ThemePreset:                          settings.ThemePreset,
 		ThemePrimaryColor:                    settings.ThemePrimaryColor,
+		ThemeSecondaryColor:                  settings.ThemeSecondaryColor,
 		AffiliateEnabled:                     settings.AffiliateEnabled,
 		RiskControlEnabled:                   settings.RiskControlEnabled,
 		AllowUserViewErrorRequests:           settings.AllowUserViewErrorRequests,
